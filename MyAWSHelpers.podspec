@@ -15,13 +15,10 @@ Pod::Spec.new do |spec|
     
 	spec.source_files = 'MyAWSHelpers/*.{h,m}'
 
-	spec.subspec "AWS" do |aws|
-        aws.source_files = 'MyAWSHelpers/*.{h,m}'
-        aws.subspec "S3" do |s3|
+	spec.subspec "S3" do |s3|
         	s3.source_files = 'MyAWSHelpers/S3/*.{h,m}'
         	s3.ios.dependency 'AWSiOSSDK/S3', '~>1.7.1'
         	s3.ios.dependency 'MyiOSHelpers/Logic/ThirdPartyHelpers/CocoaLumberjack', '~>0.0.3'
         	s3.ios.dependency 'MyiOSHelpers/Logic/Blocks', '~>0.0.3'
-        end
     end
 end

@@ -99,11 +99,11 @@ static NSString *_secretKey;
         
         AmazonServiceResponse *response = [[self s3TransferManager] synchronouslyUpload:putObjectRequest];
         
-        DDLogVerbose(@"Async Upload Finished: %@", response);
+        //DDLogVerbose(@"Async Upload Finished: %@", response);
         
         if (response.error) {
             
-            DDLogVerbose(@"error: %@", response.error);
+            //DDLogVerbose(@"error: %@", response.error);
             
             if (completionBlock) {
                 completionBlock(self,NO,response.error,nil);
@@ -123,31 +123,31 @@ static NSString *_secretKey;
 
 -(void)request:(AmazonServiceRequest *)request didReceiveResponse:(NSURLResponse *)response
 {
-    DDLogVerbose(@"didReceiveResponse called: %@", response);
+    //DDLogVerbose(@"didReceiveResponse called: %@", response);
     [[NSNotificationCenter defaultCenter] postNotificationName:MYS3Manager_DidReceiveResponse_Notification object:response];
 }
 
 - (void)request:(AmazonServiceRequest *)request didReceiveData:(NSData *)data
 {
-    DDLogVerbose(@"%@",@"didReceiveData called");
+    //DDLogVerbose(@"%@",@"didReceiveData called");
     [[NSNotificationCenter defaultCenter] postNotificationName:MYS3Manager_DidReceiveData_Notification object:data];
 }
 
 -(void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response
 {
-    DDLogVerbose(@"didCompleteWithResponse called: %@", response);
+    //DDLogVerbose(@"didCompleteWithResponse called: %@", response);
     [[NSNotificationCenter defaultCenter] postNotificationName:MYS3Manager_DidCompleteWithResponse_Notification object:response];
 }
 
 -(void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error
 {
-    DDLogVerbose(@"didFailWithError called: %@", error);
+    //DDLogVerbose(@"didFailWithError called: %@", error);
     [[NSNotificationCenter defaultCenter] postNotificationName:MYS3Manager_DidFailWithError_Notification object:error userInfo:@{@"request":request}];
 }
 
 -(void)request:(AmazonServiceRequest *)request didFailWithServiceException:(NSException *)exception
 {
-    DDLogVerbose(@"didFailWithServiceException called: %@", exception);
+    //DDLogVerbose(@"didFailWithServiceException called: %@", exception);
     [[NSNotificationCenter defaultCenter] postNotificationName:MYS3Manager_DidFailWithServiceException_Notification object:exception userInfo:@{@"request":request}];
 }
 
