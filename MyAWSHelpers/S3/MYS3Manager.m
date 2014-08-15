@@ -89,6 +89,10 @@ static NSString *_secretKey;
 {
     NSData *imageData = UIImageJPEGRepresentation(image, 0.7);
     
+    if (!s3Filename) {
+        s3Filename = [NSString stringWithFormat:@"%@.jpg",[[NSUUID UUID] UUIDString]];
+    }
+    
     [self.backgroundOperationQueue addOperationWithBlock:^{
         
         S3PutObjectRequest *putObjectRequest = [S3PutObjectRequest new];
@@ -101,6 +105,8 @@ static NSString *_secretKey;
         
         //DDLogVerbose(@"Async Upload Finished: %@", response);
         
+        NSDictionary *result = @{@"filename":s3Filename,@"AmazonServiceResponse":response};
+        
         if (response.error) {
             
             //DDLogVerbose(@"error: %@", response.error);
@@ -112,7 +118,7 @@ static NSString *_secretKey;
         } else {
             
             if (completionBlock) {
-                completionBlock(self,YES,nil,response);
+                completionBlock(self,YES,nil,result);
             }
         }
  
