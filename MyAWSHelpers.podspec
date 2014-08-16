@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
     
 	spec.name		= 'MyAWSHelpers'
-	spec.version	= '0.1.1'
+	spec.version	= '0.2.1'
 	spec.homepage   = "http://github.com/premosystems/MyAWSHelpers"
 	spec.author     = { "Vincil Bishop" => "vincil.bishop@vbishop.com" }
 	spec.license	= 'MIT'

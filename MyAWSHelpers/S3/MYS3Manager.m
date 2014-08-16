@@ -85,27 +85,35 @@ static NSString *_secretKey;
 
 #pragma mark - Helper Methods -
 
-- (void) uploadJPEGImage:(UIImage*)image bucket:(NSString*)bucket s3Filename:(NSString*)s3Filename completion:(MYCompletionBlock)completionBlock
+- (void) uploadAutoNamedJPEGImage:(UIImage*)image bucket:(NSString*)bucket s3Path:(NSString*)s3Path completion:(MYCompletionBlock)completionBlock
+{
+    NSString *s3Filename = [NSString stringWithFormat:@"%@.jpg",[[NSUUID UUID] UUIDString]];
+    
+    [self uploadJPEGImage:image bucket:bucket s3Path:s3Path s3Filename:s3Filename completion:completionBlock];
+    
+}
+
+- (void) uploadJPEGImage:(UIImage*)image bucket:(NSString*)bucket s3Path:(NSString*)s3Path s3Filename:(NSString*)s3Filename completion:(MYCompletionBlock)completionBlock
 {
     NSData *imageData = UIImageJPEGRepresentation(image, 0.7);
     
-    if (!s3Filename) {
-        s3Filename = [NSString stringWithFormat:@"%@.jpg",[[NSUUID UUID] UUIDString]];
-    }
+    NSString *s3FilenameAndPath = [NSString stringWithFormat:@"%@/%@",s3Path,s3Filename];
     
     [self.backgroundOperationQueue addOperationWithBlock:^{
         
         S3PutObjectRequest *putObjectRequest = [S3PutObjectRequest new];
         putObjectRequest.data = imageData;
         putObjectRequest.bucket = bucket;
-        putObjectRequest.key = s3Filename;
+        putObjectRequest.key = s3FilenameAndPath;
         putObjectRequest.contentType = @"image/jpeg";
         
         AmazonServiceResponse *response = [[self s3TransferManager] synchronouslyUpload:putObjectRequest];
         
         //DDLogVerbose(@"Async Upload Finished: %@", response);
         
-        NSDictionary *result = @{@"filename":s3Filename,@"AmazonServiceResponse":response};
+        NSString *urlString = [NSString stringWithFormat:@"https://s3.amazonaws.com/%@/%@",bucket,s3FilenameAndPath];
+        
+        NSDictionary *result = @{@"path":s3Path,@"filename":s3Filename,@"url":urlString,@"AmazonServiceResponse":response};
         
         if (response.error) {
             
